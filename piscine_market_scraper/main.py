@@ -141,8 +141,11 @@ def main():
         subcategories = get_subcategories(main_url)
         
         # Load existing subcategories if any
-        existing_subcategories = pd.read_csv('subcategories.csv') if os.path.isfile('subcategories.csv') else pd.DataFrame()
-        processed_subcategories = existing_subcategories['name'].tolist()
+        if os.path.isfile('subcategories.csv'):
+            existing_subcategories = pd.read_csv('subcategories.csv')
+            processed_subcategories = existing_subcategories['name'].tolist()
+        else:
+            processed_subcategories = []
 
         for subcategory in subcategories:
             if subcategory['name'] in processed_subcategories:
@@ -153,8 +156,11 @@ def main():
             all_products = []
             
             # Load existing products if any
-            existing_products = pd.read_csv('products.csv') if os.path.isfile('products.csv') else pd.DataFrame()
-            processed_products = existing_products[existing_products['category'] == subcategory['name']]['name'].tolist()
+            if os.path.isfile('products.csv'):
+                existing_products = pd.read_csv('products.csv')
+                processed_products = existing_products[existing_products['category'] == subcategory['name']]['name'].tolist()
+            else:
+                processed_products = []
 
             for product_link in products:
                 product_details = get_product_details(product_link, subcategory['name'])
